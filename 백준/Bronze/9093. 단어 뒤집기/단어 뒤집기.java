@@ -3,10 +3,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -14,22 +11,26 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int T = Integer.parseInt(br.readLine());
-        String inputLine;
-        Stack<String> s = new Stack<>();
+        Stack<Character> s = new Stack<>();
 
         for(int i = 0; i < T; i++){
-            inputLine = br.readLine();
-            List<String> strings = Arrays.stream(inputLine.split(" ")).collect(Collectors.toList());
-            for(int j = 0; j < strings.size(); j++){
-                String[] strs = strings.get(j).split("");
-                for(int k = 0; k < strs.length; k++){
-                    s.push(strs[k]);
+            String inputLine = br.readLine();
+            char[] inputChars = inputLine.toCharArray();
+            int inputLength = inputChars.length;
+            int runner = 0;
+            while(inputLength-- > 0){
+                if(inputChars[runner] != ' ' && inputLength != 0){
+                    s.push(inputChars[runner]);
+                } else {
+                    if(inputLength == 0){
+                        s.push(inputChars[runner]);
+                    }
+                    while(!s.isEmpty()) {
+                        bw.append(s.pop());
+                    }
+                    bw.append(' ');
                 }
-                int stackSize = s.size();
-                for(int l = 0; l < stackSize; l++){
-                    bw.append(s.pop());
-                }
-                bw.append(" ");
+                runner++;
             }
             bw.append('\n');
         }
