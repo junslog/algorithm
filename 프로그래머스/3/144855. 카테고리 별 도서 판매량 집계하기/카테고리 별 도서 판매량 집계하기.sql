@@ -1,0 +1,24 @@
+WITH BOOK_SALE AS (
+    SELECT
+        BOOK_ID,
+        SALES
+    FROM
+        BOOK_SALES
+    WHERE
+        SALES_DATE LIKE '2022-01%'
+)
+
+SELECT
+    b.CATEGORY,
+    SUM(bs.SALES) AS TOTAL_SALES
+FROM
+    BOOK b
+INNER JOIN
+    BOOK_SALE bs
+ON
+    b.BOOK_ID = bs.BOOK_ID
+GROUP BY
+    b.CATEGORY
+ORDER BY
+    b.CATEGORY ASC;
+
