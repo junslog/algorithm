@@ -1,0 +1,32 @@
+-- 11시 22분 시작
+
+
+WITH TEMP AS (
+    SELECT
+        ONLINE_SALE_ID,
+        os.USER_ID,
+        PRODUCT_ID,
+        SALES_DATE,
+        GENDER
+    FROM
+        ONLINE_SALE os
+    INNER JOIN
+        USER_INFO ui
+    ON
+        os.USER_ID = ui.USER_ID
+    WHERE
+        GENDER IS NOT NULL
+)
+
+SELECT
+    YEAR(SALES_DATE) as YEAR,
+    MONTH(SALES_DATE) as MONTH,
+    GENDER,
+    COUNT(DISTINCT(USER_ID)) as USERS
+FROM
+    TEMP
+GROUP BY
+    YEAR(SALES_DATE), MONTH(SALES_DATE), GENDER
+ORDER BY
+    YEAR ASC, MONTH ASC, GENDER ASC
+
