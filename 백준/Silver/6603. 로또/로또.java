@@ -1,69 +1,44 @@
-import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-
-    static int numOfLotteryNums = 6;
-    static int tcK;
-    static List<Integer> tcNumbers;
-
-    // rN = remaining Number ; rN의 개수만큼 dfs 돌 것
-    public static void dfs(int rN, List<Integer> idxList, int lastIdx){
-        List<Integer> idxListCopy = new LinkedList<>(idxList);
-
-        if(rN == 0 || idxListCopy.size() == numOfLotteryNums) {
-            for(int i = tcK - (numOfLotteryNums - idxListCopy.size()); i < tcK; i++)
-                idxListCopy.add(i);
-            for(int i = 0; i < numOfLotteryNums; i++)
-                System.out.print(tcNumbers.get(idxListCopy.get(i)) + " ");
-            System.out.println();
-            return;
-        }
-
-        int rNMinusCounter = 0;
-        int idx = lastIdx;
-        do{
-            idxListCopy.add(idx++);
-            dfs(rN - rNMinusCounter, idxListCopy, idx);
-            idxListCopy.remove(idxListCopy.size() - 1);
-            rNMinusCounter++;
-        } while((rN - rNMinusCounter) >= 0);
-    }
+    static int[] inputItems;
+    static int[] items = new int[6];
+    static int k;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st;
-        List<Integer> kList = new LinkedList<>();
-        List<List<Integer>> numbersList = new LinkedList<>();
-
-        int k;
-        List<Integer> numbers;
-
-        // TestCase Setting
-        while(true) {
-            String input = br.readLine();
-            if(input.equals("0"))
-                break;
-
+        String input;
+        while(!(input = br.readLine()).equals("0")){
             st = new StringTokenizer(input);
             k = Integer.parseInt(st.nextToken());
-            kList.add(k);
+            inputItems = new int[k];
+            for(int i = 0; i < k; i++){
+                inputItems[i] = Integer.parseInt(st.nextToken());
+            }
+            backtracking(0, 0);
+            sb.append("\n");
+        }
+        System.out.println(sb);
+        br.close();
+    }
 
-            numbers = new LinkedList<>();
-            for (int i = 0; i < k; i++)
-                numbers.add(Integer.parseInt(st.nextToken()));
-            numbersList.add(numbers);
+    public static void backtracking(int depth, int startIdx){
+        if(depth == 6){
+            for(int i = 0; i < 6; i ++){
+                sb.append(items[i]).append(" ");
+            }
+            sb.append("\n");
+            return;
         }
 
-        // TestCase별 출력
-        for(int i = 0; i < kList.size(); i++){
-            tcK = kList.get(i);
-            tcNumbers = numbersList.get(i);
-            dfs(tcK - numOfLotteryNums, new LinkedList<>(), 0);
-            System.out.println();
+        for(int i = startIdx; i < k; i++){
+            items[depth] = inputItems[i];
+            backtracking(depth+1, i+1);
         }
     }
 }
