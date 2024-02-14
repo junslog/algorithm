@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class Main {
+public class Main{
     static int N;
     static int[] T;
     static int[] P;
@@ -27,7 +27,7 @@ public class Main {
     }
 
     public static void backtracking(int index, List<Integer> prices){
-        if(index >= N){
+        if(index == N){
             int sum = 0;
             for(int i = 0; i < prices.size(); i++){
                 sum += prices.get(i);
@@ -38,12 +38,14 @@ public class Main {
             return;
         }
 
-        if(index + T[index] <= N) {
-            List<Integer> pCopy1 = new ArrayList<>(prices);
-            pCopy1.add(P[index]);
-            backtracking(index + T[index], pCopy1);
+        if(index > N){
+            return;
         }
+
         List<Integer> pCopy2 = new ArrayList<>(prices);
         backtracking(index + 1, pCopy2);
+        List<Integer> pCopy1 = new ArrayList<>(prices);
+        pCopy1.add(P[index]);
+        backtracking(index + T[index], pCopy1);
     }
 }
