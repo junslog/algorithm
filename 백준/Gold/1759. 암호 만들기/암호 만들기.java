@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+
 public class Main {
     static int L,C;
     static List<Character> mList = new ArrayList<>(Arrays.asList('a','e','i','o','u'));
@@ -29,8 +30,8 @@ public class Main {
         System.out.println(sb);
     }
 
-    public static void backtracking(int depth, int startIdx){
-        if(depth == L){
+    public static void backtracking(int selected, int index){
+        if(selected == L){
             if(!isValid()){
                 return;
             }
@@ -40,10 +41,15 @@ public class Main {
             sb.append("\n");
             return;
         }
-        for(int i = startIdx; i < C; i++){
-            items[depth] = input[i];
-            backtracking(depth+1, i+1);
+
+        if(index >= C){
+            return;
         }
+
+        items[selected] = input[index];
+        backtracking(selected +1, index +1);
+        items[selected] = '0';
+        backtracking(selected, index+1);
     }
 
     public static boolean isValid(){
