@@ -20,19 +20,16 @@ public class Main {
         for (int i = 0; i < N; i++) {
             input[i] = Integer.parseInt(st.nextToken());
         }
-        backtracking(0, 0);
+        backtracking(0, 0, 0);
         System.out.println(sumOfMinimums);
     }
 
-    public static void backtracking(int selected, int index) {
+    public static void backtracking(int selected, int index, int sum) {
+        if (sum > M) {
+            return;
+        }
+
         if (selected == 3) {
-            if (!isValid()) {
-                return;
-            }
-            int sum = 0;
-            for (int i = 0; i < 3; i++) {
-                sum += items[i];
-            }
             int gap = M - sum;
             if (gap < minimumGap) {
                 minimumGap = gap;
@@ -46,11 +43,7 @@ public class Main {
         }
 
         items[selected] = input[index];
-        backtracking(selected + 1, index + 1);
-        backtracking(selected, index + 1);
-    }
-
-    public static boolean isValid() {
-        return (items[0] + items[1] + items[2]) <= M;
+        backtracking(selected + 1, index + 1, sum + items[selected]);
+        backtracking(selected, index + 1, sum);
     }
 }
