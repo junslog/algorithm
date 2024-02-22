@@ -1,0 +1,21 @@
+WITH SKILL_CODES AS (
+    SELECT
+        CODE
+    FROM
+        SKILLCODES
+    WHERE
+        NAME IN ('Python', 'C#')
+)
+
+
+SELECT
+    DISTINCT(ID),
+    EMAIL,
+    FIRST_NAME,
+    LAST_NAME
+FROM
+    DEVELOPERS d, SKILL_CODES sc
+WHERE
+    d.SKILL_CODE | sc.CODE = SKILL_CODE
+ORDER BY
+    ID ASC
