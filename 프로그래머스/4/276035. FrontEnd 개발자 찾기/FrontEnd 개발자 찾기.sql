@@ -1,0 +1,21 @@
+WITH FRONT_END_SKILL_CODES AS (
+    SELECT
+        CODE
+    FROM
+        SKILLCODES
+    WHERE
+        CATEGORY = 'Front End'
+)
+
+SELECT
+    DISTINCT(ID),
+    EMAIL,
+    FIRST_NAME,
+    LAST_NAME
+FROM
+    DEVELOPERS d, FRONT_END_SKILL_CODES fsc
+WHERE
+    d.SKILL_CODE | fsc.CODE = d.SKILL_CODE
+ORDER BY
+    ID ASC
+    
