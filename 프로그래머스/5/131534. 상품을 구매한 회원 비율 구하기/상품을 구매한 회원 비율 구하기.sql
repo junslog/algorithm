@@ -1,0 +1,27 @@
+WITH 2021_USERS AS (
+    SELECT
+        DISTINCT(USER_ID) as USER_ID
+    FROM
+        USER_INFO
+    WHERE
+        JOINED BETWEEN '2021-01-01' AND '2021-12-31'
+)
+
+SELECT
+    YEAR(SALES_DATE) as YEAR,
+    MONTH(SALES_DATE) as MONTH,
+    COUNT(DISTINCT os.USER_ID) as PUCHASED_USERS,
+    ROUND(COUNT(DISTINCT os.USER_ID) / (SELECT 
+                                    COUNT(USER_ID) 
+                                FROM 2021_USERS)
+                                    ,1) as PUCHASED_RATIO
+FROM
+    ONLINE_SALE os
+INNER JOIN
+    2021_USERS 2u
+ON
+    os.USER_ID = 2u.USER_ID
+GROUP BY
+    YEAR, MONTH
+ORDER BY
+    YEAR ASC, MONTH ASC
