@@ -1,69 +1,81 @@
-import java.util.*;
-
-class Pair {
-    int x;
-    int y;
-    Pair(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class Main {
-    public static final int[] dx = {0, 0, 1, -1};
-    public static final int[] dy = {1, -1, 0, 0};
-    public static void bfs(int[][] a, int[][] group, int x, int y, int cnt, int n) {
-        Queue<Pair> q = new LinkedList<Pair>();
-        q.add(new Pair(x, y));
-        group[x][y] = cnt;
-        while (!q.isEmpty()) {
-            Pair p = q.remove();
-            x = p.x;
-            y = p.y;
-            for (int k=0; k<4; k++) {
-                int nx = x+dx[k];
-                int ny = y+dy[k];
-                if (0 <= nx && nx < n && 0 <= ny && ny < n) {
-                    if (a[nx][ny] == 1 && group[nx][ny] == 0) {
-                        q.add(new Pair(nx, ny));
-                        group[nx][ny] = cnt;
-                    }
-                }
+    static int N;
+    static int[][] map;
+    static boolean[][] visited;
+    static int[] dx = {0, 1, 0, -1};
+    static int[] dy = {1, 0, -1, 0};
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        // Map Initialization
+        map = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            char[] lineArray = br.readLine().toCharArray();
+            for (int j = 0; j < N; j++) {
+                map[i][j] = Integer.parseInt(String.valueOf(lineArray[j]));
             }
+        }
+        visited = new boolean[N][N];
+
+        int countOfComplex = 0;
+        List<Integer> numOfHousesInComplex = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (visited[i][j] || map[i][j] == 0) {
+                    continue;
+                }
+                countOfComplex++;
+                visited[i][j] = true;
+                numOfHousesInComplex.add(bfs(new Coordinate(i, j)));
+            }
+        }
+
+        // 출력
+        Collections.sort(numOfHousesInComplex);
+        System.out.println(countOfComplex);
+        for (int num : numOfHousesInComplex) {
+            System.out.println(num);
         }
     }
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        sc.nextLine();
-        int[][] a = new int[n][n];
-        for (int i=0; i<n; i++) {
-            String s = sc.nextLine();
-            for (int j=0; j<n; j++) {
-                a[i][j] = s.charAt(j) - '0';
-            }
-        }
-        int cnt = 0;
-        int[][] group = new int[n][n];
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<n; j++) {
-                if (a[i][j] == 1 && group[i][j] == 0) {
-                    bfs(a, group, i, j, ++cnt, n);
+
+    public static int bfs(Coordinate c) {
+        Queue<Coordinate> q = new LinkedList<>();
+        q.add(c);
+        int count = 0;
+        while (!q.isEmpty()) {
+            Coordinate elem = q.poll();
+            count++;
+            for (int i = 0; i < 4; i++) {
+                if (elem.x + dx[i] < 0 || elem.x + dx[i] >= N || elem.y + dy[i] < 0 || elem.y + dy[i] >= N) {
+                    continue;
                 }
-            }
-        }
-        int[] ans = new int[cnt];
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<n; j++) {
-                if (group[i][j] != 0) {
-                    ans[group[i][j]-1]+=1;
+                if (visited[elem.x + dx[i]][elem.y + dy[i]] || map[elem.x + dx[i]][elem.y + dy[i]] == 0) {
+                    continue;
                 }
+                visited[elem.x + dx[i]][elem.y + dy[i]] = true;
+                q.add(new Coordinate(elem.x + dx[i], elem.y + dy[i]));
             }
         }
-        Arrays.sort(ans);
-        System.out.println(cnt);
-        for (int i=0; i<cnt; i++) {
-            System.out.println(ans[i]);
+        return count;
+    }
+
+    public static class Coordinate {
+        int x;
+        int y;
+
+        Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }
