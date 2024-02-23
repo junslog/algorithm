@@ -1,51 +1,72 @@
-import java.util.*;
-
-class Pair {
-    int x;
-    int y;
-    Pair(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static final int[] dx = {0, 0, 1, -1};
-    public static final int[] dy = {1, -1, 0, 0};
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        int[][] a = new int[n][m];
-        sc.nextLine();
-        for (int i=0; i<n; i++) {
-            String s = sc.nextLine();
-            for (int j=0; j<m; j++) {
-                a[i][j] = s.charAt(j) - '0';
+    static int N, M;
+    static int[][] map;
+    static boolean[][] visited;
+    static int minimumCount = 1;
+
+    static int[] dx = {0, 1, 0, -1};
+    static int[] dy = {1, 0, -1, 0};
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        // Map Initialization
+        map = new int[N][M];
+        for (int i = 0; i < N; i++) {
+            char[] lineArray = br.readLine().toCharArray();
+            for (int j = 0; j < M; j++) {
+                map[i][j] = Integer.parseInt(String.valueOf(lineArray[j]));
             }
         }
-        int[][] dist = new int[n][m];
-        boolean[][] check = new boolean[n][m];
-        Queue<Pair> q = new LinkedList<Pair>();
-        q.add(new Pair(0, 0));
-        check[0][0] = true;
-        dist[0][0] = 1;
+        visited = new boolean[N][M];
+        bfs();
+        System.out.println(minimumCount);
+    }
+
+    public static void bfs() {
+        Queue<Coordinate> q = new LinkedList<>();
+        q.add(new Coordinate(0, 0));
+        int qSize = q.size();
         while (!q.isEmpty()) {
-            Pair p = q.remove();
-            int x = p.x;
-            int y = p.y;
-            for (int k=0; k<4; k++) {
-                int nx = x+dx[k];
-                int ny = y+dy[k];
-                if (0 <= nx && nx < n && 0 <= ny && ny < m) {
-                    if (check[nx][ny] == false && a[nx][ny] == 1) {
-                        q.add(new Pair(nx, ny));
-                        dist[nx][ny] = dist[x][y] + 1;
-                        check[nx][ny] = true;
+            for (int step = 0; step < qSize; step++) {
+                Coordinate elem = q.poll();
+                for (int i = 0; i < 4; i++) {
+                    if (elem.x + dx[i] < 0 || elem.x + dx[i] >= N || elem.y + dy[i] < 0 || elem.y + dy[i] >= M) {
+                        continue;
                     }
+                    if (visited[elem.x + dx[i]][elem.y + dy[i]] || map[elem.x + dx[i]][elem.y + dy[i]] == 0) {
+                        continue;
+                    }
+
+                    if (elem.x + dx[i] == N - 1 && elem.y + dy[i] == M - 1) {
+                        minimumCount++;
+                        return;
+                    }
+                    visited[elem.x + dx[i]][elem.y + dy[i]] = true;
+                    q.add(new Coordinate(elem.x + dx[i], elem.y + dy[i]));
                 }
             }
+            qSize = q.size();
+            minimumCount++;
         }
-        System.out.println(dist[n-1][m-1]);
+    }
+
+    public static class Coordinate {
+        int x;
+        int y;
+
+        Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
