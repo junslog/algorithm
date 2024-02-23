@@ -1,61 +1,81 @@
-import java.util.*;
-
-class Pair {
-    int x;
-    int y;
-    Pair(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static final int[] dx = {0, 0, 1, -1, 1, 1, -1, -1};
-    public static final int[] dy = {1, -1, 0, 0, 1, -1, 1, -1};
-    public static void bfs(int[][] a, int[][] group, int x, int y, int cnt, int n, int m) {
-        Queue<Pair> q = new LinkedList<Pair>();
-        q.add(new Pair(x, y));
-        group[x][y] = cnt;
-        while (!q.isEmpty()) {
-            Pair p = q.remove();
-            x = p.x;
-            y = p.y;
-            for (int k=0; k<8; k++) {
-                int nx = x+dx[k];
-                int ny = y+dy[k];
-                if (0 <= nx && nx < n && 0 <= ny && ny < m) {
-                    if (a[nx][ny] == 1 && group[nx][ny] == 0) {
-                        q.add(new Pair(nx, ny));
-                        group[nx][ny] = cnt;
-                    }
+
+    static int[][] map;
+    static boolean[][] visited;
+    static int w, h;
+    static int[] dx = {0, 1, 1, 1, 0, -1, -1, -1};
+    static int[] dy = {1, 1, 0, -1, -1, -1, 0, 1};
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+        while (true) {
+            st = new StringTokenizer(br.readLine());
+            w = Integer.parseInt(st.nextToken());
+            h = Integer.parseInt(st.nextToken());
+
+            if (w == 0 && h == 0) {
+                break;
+            }
+
+            map = new int[h][w];
+            for (int i = 0; i < h; i++) {
+                st = new StringTokenizer(br.readLine());
+                for (int j = 0; j < w; j++) {
+                    map[i][j] = Integer.parseInt(st.nextToken());
                 }
+            }
+            visited = new boolean[h][w];
+
+            int numOfIslands = 0;
+            for (int i = 0; i < h; i++) {
+                for (int j = 0; j < w; j++) {
+                    if (visited[i][j] || map[i][j] == 0) {
+                        continue;
+                    }
+                    numOfIslands++;
+                    visited[i][j] = true;
+                    bfs(i, j);
+                }
+            }
+            sb.append(numOfIslands).append("\n");
+        }
+        System.out.println(sb);
+    }
+
+    public static void bfs(int startX, int startY) {
+        Queue<Land> q = new LinkedList<>();
+        q.add(new Land(startX, startY));
+        while (!q.isEmpty()) {
+            Land elem = q.poll();
+            for (int i = 0; i < 8; i++) {
+                if (elem.x + dx[i] < 0 || elem.x + dx[i] >= h || elem.y + dy[i] < 0 || elem.y + dy[i] >= w) {
+                    continue;
+                }
+                if (visited[elem.x + dx[i]][elem.y + dy[i]] || map[elem.x + dx[i]][elem.y + dy[i]] == 0) {
+                    continue;
+                }
+                visited[elem.x + dx[i]][elem.y + dy[i]] = true;
+                q.add(new Land(elem.x + dx[i], elem.y + dy[i]));
             }
         }
     }
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            int m = sc.nextInt();
-            int n = sc.nextInt();
-            if (n == 0 && m == 0) {
-                break;
-            }
-            int[][] a = new int[n][m];
-            for (int i=0; i<n; i++) {
-                for (int j=0; j<m; j++) {
-                    a[i][j] = sc.nextInt();
-                }
-            }
-            int cnt = 0;
-            int[][] group = new int[n][m];
-            for (int i=0; i<n; i++) {
-                for (int j=0; j<m; j++) {
-                    if (a[i][j] == 1 && group[i][j] == 0) {
-                        bfs(a, group, i, j, ++cnt, n, m);
-                    }
-                }
-            }
-            System.out.println(cnt);
+
+    public static class Land {
+        int x;
+        int y;
+
+        Land(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }
