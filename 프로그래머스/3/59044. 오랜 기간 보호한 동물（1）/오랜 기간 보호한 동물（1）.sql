@@ -1,0 +1,22 @@
+WITH GOODBYE_ANIMAL_IDS AS (
+    SELECT
+        ANIMAL_ID
+    FROM
+        ANIMAL_OUTS
+)
+
+SELECT
+    NAME,
+    DATETIME
+FROM
+    ANIMAL_INS ai
+WHERE
+    ai.ANIMAL_ID NOT IN (
+        SELECT
+            ANIMAL_ID
+        FROM
+            GOODBYE_ANIMAL_IDS
+    )
+ORDER BY
+    ai.DATETIME ASC
+LIMIT 3
