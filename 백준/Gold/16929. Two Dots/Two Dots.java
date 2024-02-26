@@ -1,54 +1,61 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
 public class Main {
-    static char[][] a;
-    static boolean[][] check;
-    static int[][] dist;
-    static int n, m;
-    final static int[] dx = {0,0,1,-1};
-    final static int[] dy = {1,-1,0,0};
-    static boolean go(int x, int y, int cnt, char color) {
-        if (check[x][y]) {
-            if (cnt-dist[x][y] >= 4) {
-                return true;
-            } else {
-                return false;
+    static int N, M;
+    static char[][] map;
+    static boolean[][] visited;
+    static int startX, startY;
+    static boolean found;
+    static int[] dx = {1, 0, -1, 0};
+    static int[] dy = {0, 1, 0, -1};
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new char[N][M];
+
+        // Map Initialize
+        for (int i = 0; i < N; i++) {
+            char[] input = br.readLine().toCharArray();
+            for (int j = 0; j < M; j++) {
+                map[i][j] = input[j];
             }
         }
-        check[x][y] = true;
-        dist[x][y] = cnt;
-        for (int k=0; k<4; k++) {
-            int nx = x+dx[k];
-            int ny = y+dy[k];
-            if (0 <= nx && nx < n && 0 <= ny && ny < m) {
-                if (a[nx][ny] == color) {
-                    if (go(nx, ny, cnt+1, color)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        a = new char[n][m];
-        check = new boolean[n][m];
-        for (int i=0; i<n; i++) {
-            a[i] = sc.next().toCharArray();
-        }
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<m; j++) {
-                if (check[i][j]) continue;
-                dist = new int[n][m];
-                boolean ok = go(i, j, 1, a[i][j]);
-                if (ok) {
-                    System.out.println("Yes");
-                    System.exit(0);
-                }
+        visited = new boolean[N][M];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                startX = i;
+                startY = j;
+                visited[i][j] = true;
+                dfs(i, j, 0);
+                visited[i][j] = false;
             }
         }
         System.out.println("No");
+    }
+
+    public static void dfs(int posX, int posY, int depth) {
+        for (int i = 0; i < 4; i++) {
+            int nx = posX + dx[i];
+            int ny = posY + dy[i];
+            if (nx < 0 || ny < 0 || nx >= N || ny >= M) {
+                continue;
+            }
+            if (nx == startX && ny == startY && depth >= 3) {
+                System.out.println("Yes");
+                System.exit(0);
+            }
+            if (visited[nx][ny] || (map[posX][posY] != map[nx][ny])) {
+                continue;
+            }
+            visited[nx][ny] = true;
+            dfs(nx, ny, depth + 1);
+            visited[nx][ny] = false;
+        }
     }
 }
