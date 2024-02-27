@@ -36,7 +36,7 @@ public class Main {
         isInCycle = new boolean[N];
         for (int i = 0; i < N; i++) {
             visited[i] = true;
-            dfs(i, -1, i, 0);
+            dfs(i, -1, i);
             visited[i] = false;
         }
 
@@ -55,7 +55,7 @@ public class Main {
         System.out.println(sb);
     }
 
-    public static void dfs(int start, int prev, int curr, int depth) {
+    public static void dfs(int start, int prev, int curr) {
         for (int elem : adjList[curr]) {
             if (prev != start && elem == start) {
                 isInCycle[start] = true;
@@ -65,7 +65,7 @@ public class Main {
                 continue;
             }
             visited[elem] = true;
-            dfs(start, curr, elem, depth + 1);
+            dfs(start, curr, elem);
             visited[elem] = false;
         }
     }
