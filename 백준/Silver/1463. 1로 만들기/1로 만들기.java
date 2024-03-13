@@ -1,38 +1,50 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Main {
-    static int[] d;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        d = new int[N + 1];
-        System.out.println(op(N));
-        br.close();
+        Queue<Node> q = new LinkedList<>();
+        boolean[] visited = new boolean[N + 1];
+        q.add(new Node(N, 0));
+        int minCount;
+        while (true) {
+            Node elem = q.poll();
+            int v = elem.value;
+            if (v == 1) {
+                minCount = elem.opCount;
+                break;
+            }
+            if (visited[v]) {
+                continue;
+            }
+            visited[v] = true;
+            int oc = elem.opCount;
+            if (v % 3 == 0) {
+                q.add(new Node(v / 3, oc + 1));
+            }
+            if (v % 2 == 0) {
+                q.add(new Node(v / 2, oc + 1));
+            }
+            if (v >= 2) {
+                q.add(new Node(v - 1, oc + 1));
+            }
+        }
+        System.out.println(minCount);
     }
 
-    public static int op(int N){
-        if(N == 1){
-            return 0;
+    public static class Node {
+        int value;
+        int opCount;
+
+        Node(int value, int opCount) {
+            this.value = value;
+            this.opCount = opCount;
         }
-        if(d[N] > 0){
-            return d[N];
-        }
-        d[N] = op(N-1) + 1;
-        if(N % 2 == 0){
-            int temp = op(N/2) + 1;
-            if(d[N] > temp){
-                d[N] = temp;
-            }
-        }
-        if(N % 3 == 0){
-            int temp = op(N/3) + 1;
-            if (d[N] > temp) {
-                d[N] = temp;
-            }
-        }
-        return d[N];
     }
 }
