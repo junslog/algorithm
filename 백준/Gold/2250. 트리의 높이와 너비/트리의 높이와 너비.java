@@ -12,6 +12,7 @@ public class Main {
     static int[] levelMin;
     static int[] levelMax;
     static int order = 0;
+    static int maxLevelDistance = -1;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -82,24 +83,17 @@ public class Main {
             }
         }
         markLevel(root, 1);
-
         levelMin = new int[maxLevel + 1];
         levelMax = new int[maxLevel + 1];
         inOrder(root);
-
-        int[] levelDistance = new int[maxLevel + 1];
-        int levDistance = -1;
-        int minLev = maxLevel;
-        for (int i = maxLevel; i >= 1; i--) {
-            levelDistance[i] = levelMax[i] - levelMin[i] + 1;
-            if (levDistance <= levelDistance[i]) {
-                levDistance = levelDistance[i];
-                if (minLev > i) {
-                    minLev = i;
-                }
+        int minLevel = -1;
+        for (int i = 1; i <= maxLevel; i++) {
+            if (levelMax[i] - levelMin[i] + 1 == maxLevelDistance) {
+                minLevel = i;
+                break;
             }
         }
-        System.out.println(minLev + " " + levelDistance[minLev]);
+        System.out.println(minLevel + " " + maxLevelDistance);
     }
 
     public static void markLevel(Node root, int level) {
@@ -135,6 +129,9 @@ public class Main {
             if (levelMax[currLevel] < order) {
                 levelMax[currLevel] = order;
             }
+        }
+        if (levelMax[currLevel] - levelMin[currLevel] + 1 > maxLevelDistance) {
+            maxLevelDistance = levelMax[currLevel] - levelMin[currLevel] + 1;
         }
         inOrder(curr.right);
     }
