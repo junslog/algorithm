@@ -29,7 +29,7 @@ public class Main {
             for (Node n : tree) {
                 if (n.value == parent) {
                     p = n;
-                    p.existParent();
+                    p.existParent = true;
                     break;
                 }
             }
@@ -45,30 +45,31 @@ public class Main {
                     if (n.value == child1) {
                         found = true;
                         c1 = n;
+                        break;
                     }
                 }
                 if (!found) {
                     c1 = new Node(child1);
                 }
-                c1.existParent();
+                c1.existParent = true;
                 tree.add(c1);
             }
-            
+
             if (child2 != -1) {
                 boolean found = false;
                 for (Node n : tree) {
                     if (n.value == child2) {
                         found = true;
                         c2 = n;
+                        break;
                     }
                 }
                 if (!found) {
                     c2 = new Node(child2);
                 }
-                c2.existParent();
+                c2.existParent = true;
                 tree.add(c2);
             }
-            
             p.setLeft(c1);
             p.setRight(c2);
         }
@@ -143,16 +144,12 @@ public class Main {
         int value;
         int level;
         boolean existParent;
-        Node left = null;
-        Node right = null;
+        Node left;
+        Node right;
 
         Node(int value) {
             this.value = value;
             this.existParent = false;
-        }
-
-        void existParent() {
-            this.existParent = true;
         }
 
         void setLeft(Node left) {
