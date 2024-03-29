@@ -54,22 +54,22 @@ public class Main {
                     if (nx < 0 || nx >= h || ny < 0 || ny >= w) {
                         continue;
                     }
-                    if (visited[nx][ny] || map[nx][ny].isFire() || map[nx][ny].isWall()) {
+                    if (visited[nx][ny] || map[nx][ny].isWall() || map[nx][ny].isFire()) {
                         continue;
                     }
                     visited[nx][ny] = true;
-                    if (map[nx][ny].fireMinStep > p.fireMinStep + 1) {
+                    if (p.fireMinStep + 1 < map[nx][ny].fireMinStep) {
                         map[nx][ny].fireMinStep = p.fireMinStep + 1;
-                        fq.add(map[nx][ny]);
                     }
+                    fq.add(map[nx][ny]);
                 }
             }
             // 2. 상근이 최단거리 마킹, 가능한 최단거리 반환
             Queue<Position> sq = new ArrayDeque<>();
-            sanguen.sangeunMinStep = 0;
             visited = new boolean[h][w];
             int minStep = -1;
             boolean escaped = false;
+            sanguen.sangeunMinStep = 0;
             sq.add(sanguen);
             while (!sq.isEmpty()) {
                 if (escaped) {
@@ -88,9 +88,7 @@ public class Main {
                         continue;
                     }
                     visited[nx][ny] = true;
-                    if (map[nx][ny].sangeunMinStep > p.sangeunMinStep + 1) {
-                        map[nx][ny].sangeunMinStep = p.sangeunMinStep + 1;
-                    }
+                    map[nx][ny].sangeunMinStep = p.sangeunMinStep + 1;
                     if (map[nx][ny].sangeunMinStep >= map[nx][ny].fireMinStep) {
                         continue;
                     }
