@@ -2,8 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -21,9 +19,8 @@ public class Main {
         int H = Integer.parseInt(st.nextToken());
 
         int[][][] originBox = new int[N][M][H];
-        Position[][][] box = new Position[N][M][H];
         Queue<Position> ripenTomatoes = new ArrayDeque<>();
-        List<Position> unripenTomatoes = new ArrayList<>();
+        boolean existUnripenTomatoes = false;
         boolean[][][] visited = new boolean[N][M][H];
         for (int h = 0; h < H; h++) {
             for (int n = 0; n < N; n++) {
@@ -35,12 +32,12 @@ public class Main {
                         visited[n][m][h] = true;
                     }
                     if (originBox[n][m][h] == 0) {
-                        unripenTomatoes.add(new Position(n, m, h, 0));
+                        existUnripenTomatoes = true;
                     }
                 }
             }
         }
-        if (unripenTomatoes.isEmpty()) {
+        if (!existUnripenTomatoes) {
             System.out.println(0);
         } else {
             int step = -1;
