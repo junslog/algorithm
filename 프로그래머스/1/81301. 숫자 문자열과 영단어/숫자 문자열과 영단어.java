@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.*;
 
 class Solution {
     public int solution(String s) {
@@ -6,12 +7,15 @@ class Solution {
         Map<String, Integer> sToInt = new HashMap<>();
         String[] ss = {"zero", "one", "two", "three", "four", 
                        "five", "six", "seven", "eight", "nine"};
-        List<String> numbers = List.of(new String[]{"0", "1", "2", "3", "4",
-                           "5", "6", "7", "8", "9"});
-        
         for(int i = 0; i <= 9; i++){
             sToInt.put(ss[i], i);
         }
+        
+        String[] nums = {"0", "1", "2", "3", "4",
+                           "5", "6", "7", "8", "9"};
+        List<String> numbers = Arrays.stream(nums).collect(Collectors.toList());
+        
+        
         String[] items = s.split("");
         int itemsLen = items.length;
         int runner = 0;
