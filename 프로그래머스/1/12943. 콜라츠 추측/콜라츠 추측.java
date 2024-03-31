@@ -1,5 +1,5 @@
 class Solution {
-    public int solution(int num) {
+    public int solution(long num) {
         if(num == 1){
             return 0;
         }
