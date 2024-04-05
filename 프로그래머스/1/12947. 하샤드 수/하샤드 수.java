@@ -3,8 +3,8 @@ import java.util.stream.Collectors;
 
 class Solution {
     public boolean solution(int x) {
-        int sum = Arrays.stream(String.valueOf(x).split(""))
-            .mapToInt(Integer::parseInt)
+        int sum = String.valueOf(x).chars()
+            .map(ch -> ch - '0')
             .sum();
         return x % sum == 0;
     }
