@@ -5,41 +5,40 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N;
-    static int M;
-    static boolean[] check;
-    static int[] items;
-    
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        check = new boolean[N+1];
-        items = new int[M+1];
-        permutation(0);
+  static int N, M;
+  static boolean[] visited;
+  static int[] values;
+
+  static StringBuilder sb = new StringBuilder();
+
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    N = Integer.parseInt(st.nextToken());
+    M = Integer.parseInt(st.nextToken());
+    visited = new boolean[N + 1];
+    values = new int[N];
+    backtracking(0);
+    System.out.println(sb);
+    br.close();
+  }
+
+  private static void backtracking(int depth) {
+    if (depth == M) {
+      for (int i = 0; i < M; i++) {
+        sb.append(values[i]).append(" ");
+      }
+      sb.append("\n");
     }
 
-    public static void permutation(int depth){
-        if(depth == M){
-            StringBuilder sb = new StringBuilder();
-            for(int item : items){
-                if(item == 0){
-                    break;
-                }
-                sb.append(item).append(" ");
-            }
-            System.out.println(sb);
-            return;
-        }
-
-        for(int i = 1; i <= N; i++){
-            if(check[i]){
-                continue;
-            }
-            check[i] = true; items[depth] = i;
-            permutation(depth+1);
-            check[i] = false;
-        }
+    for (int i = 1; i <= N; i++) {
+      if (visited[i]) {
+        continue;
+      }
+      visited[i] = true;
+      values[depth] = i;
+      backtracking(depth + 1);
+      visited[i] = false;
     }
+  }
 }
