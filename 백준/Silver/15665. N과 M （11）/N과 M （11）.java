@@ -2,57 +2,54 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N,M;
-    static int[] input;
-    static int[] items;
-    static Set<String> remember;
-    static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        st = new StringTokenizer(br.readLine());
-        input = new int[N];
-        for(int i =0; i < N; i++){
-            input[i] = Integer.parseInt(st.nextToken());
-        }
-        Arrays.sort(input);
-        items = new int[M];
-        remember = new HashSet<>();
-        backtracking(0);
-        System.out.println(sb);
-        br.close();
+  static int[] items;
+  static int[] choices;
+  static int itemsLen;
+  static int N, M;
+  static StringBuilder sb = new StringBuilder();
+
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    N = Integer.parseInt(st.nextToken());
+    M = Integer.parseInt(st.nextToken());
+
+    st = new StringTokenizer(br.readLine());
+    Map<Integer, Boolean> exist = new HashMap<>();
+    for (int i = 0; i < N; i++) {
+      exist.put(Integer.parseInt(st.nextToken()), true);
+    }
+    int size = exist.keySet().size();
+    items = new int[size];
+    int runner = 0;
+    for (int k : exist.keySet()) {
+      items[runner++] = k;
+    }
+    Arrays.sort(items);
+    itemsLen = items.length;
+    choices = new int[M];
+    backtracking(0);
+    System.out.println(sb);
+  }
+
+  private static void backtracking(int depth) {
+    if (depth == M) {
+      for (int i = 0; i < M; i++) {
+        sb.append(choices[i]).append(" ");
+      }
+      sb.append("\n");
+      return;
     }
 
-    public static void backtracking(int depth){
-        if(depth == M) {
-            StringBuilder temp = new StringBuilder();
-            for(int i = 0; i < M; i++){
-                temp.append(items[i]).append(" ");
-            }
-            temp.append("\n");
-            String tempVal = temp.toString();
-            if (!isRemembered(tempVal)) {
-                remember.add(tempVal);
-                sb.append(tempVal);
-            }
-            return;
-        }
-
-        for(int i = 0; i < N; i++){
-            items[depth] = input[i];
-            backtracking(depth+1);
-        }
+    for (int i = 0; i < itemsLen; i++) {
+      choices[depth] = items[i];
+      backtracking(depth + 1);
     }
-
-    public static boolean isRemembered(String item){
-        return remember.contains(item);
-    }
+  }
 }
