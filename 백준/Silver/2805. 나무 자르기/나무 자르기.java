@@ -8,31 +8,34 @@ public class Main {
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer st = new StringTokenizer(br.readLine());
-    int N = Integer.parseInt(st.nextToken());
-    int M = Integer.parseInt(st.nextToken());
+    int n = Integer.parseInt(st.nextToken());
+    int m = Integer.parseInt(st.nextToken());
 
-    long[] height = new long[N];
+    int[] arr = new int[n];
     st = new StringTokenizer(br.readLine());
-    long maxHeight = Long.MIN_VALUE;
-    for (int i = 0; i < N; i++) {
-      height[i] = Integer.parseInt(st.nextToken());
-      maxHeight = Math.max(maxHeight, height[i]);
+    int left = 0;
+    int right = -1;
+    for (int i = 0; i < n; i++) {
+      arr[i] = Integer.parseInt(st.nextToken());
+      right = Math.max(right, arr[i]);
     }
-    long left = 0L;
-    long right = maxHeight;
-    while (left < right) {
-      long mid = (left + right) / 2;
-      long sum = 0L;
-      for (int i = 0; i < N; i++) {
-        sum += (height[i] > mid ? height[i] - mid : 0);
+
+    while (left <= right) {
+      int mid = (left + right) / 2;
+      long tree = 0;
+      for (int i = 0; i < n; i++) {
+        if (arr[i] > mid) {
+          tree += arr[i] - mid;
+        }
       }
-      if (sum >= M) {
+      if (tree >= m) {
         left = mid + 1;
       } else {
-        right = mid;
+        right = mid - 1;
       }
     }
-    System.out.println(left - 1);
+
+    System.out.println(right);
   }
 
 }
