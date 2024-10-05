@@ -20,8 +20,8 @@ public class Main {
     }
     long left = 0L;
     long right = maxHeight;
-    while (left <= right) {
-      long mid = (left + right + 1) / 2;
+    while (left < right) {
+      long mid = (left + right) / 2;
       long sum = 0L;
       for (int i = 0; i < N; i++) {
         sum += (height[i] > mid ? height[i] - mid : 0);
@@ -29,10 +29,10 @@ public class Main {
       if (sum >= M) {
         left = mid + 1;
       } else {
-        right = mid - 1;
+        right = mid;
       }
     }
-    System.out.println(right);
+    System.out.println(left - 1);
   }
 
 }
