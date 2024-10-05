@@ -4,35 +4,33 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N;
-    static int M;
-    static int[] items;
-    static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+  static int N, M;
+  static int[] items;
+  static StringBuilder sb = new StringBuilder();
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        items = new int[M];
-        backtracking(0, 1);
-        System.out.println(sb);
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    N = Integer.parseInt(st.nextToken());
+    M = Integer.parseInt(st.nextToken());
+    items = new int[M];
+    backtracking(1, 0);
+    System.out.println(sb);
+  }
+
+  private static void backtracking(int start, int depth) {
+    if (depth == M) {
+      for (int i = 0; i < M; i++) {
+        sb.append(items[i]).append(" ");
+      }
+      sb.append("\n");
+      return;
     }
 
-    public static void backtracking(int depth, int start){
-        if(depth == M){
-            for(int i = 0; i < M; i++){
-                sb.append(items[i]).append(" ");
-            }
-            sb.append("\n");
-            return;
-        }
-
-        for(int i = start; i <= N; i++){
-            start = i;
-            items[depth] = i;
-            backtracking(depth + 1, start);
-        }
+    for (int i = start; i <= N; i++) {
+      items[depth] = i;
+      backtracking(i, depth + 1);
     }
+  }
 }
